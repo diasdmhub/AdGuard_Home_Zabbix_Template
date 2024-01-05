@@ -91,7 +91,7 @@ $string = 'username:password'
 
 **2.** Copy and paste the encoded string into your host's macro `{$ADGUARD.AUTH}`.
 
-<BR>
+<BR><BR>
 
 
 ### MACROS USED

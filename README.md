@@ -31,7 +31,7 @@ The main focus is on monitoring statistics from AdGuard Home.
 
 ### TEMPLATES
 
-For more flexibility, the release includes templates that cover **two monitoring methods**, one for native HTTP data retrieval and another for Zabbix Agent Active. Both methods provide the same monitoring items, but with different item types. **They should not be used together**.
+For more flexibility, the release includes templates that cover **two monitoring methods**, one for native HTTP data retrieval and another for Zabbix Agent Active. Both methods provide the same monitoring items, but with different item types. **They should not be used together on the same host**.
 
 There are also **two independent template types**. One is for HTTP AdGuard Home general status and statistics, and the other is for filter parameters discovery. \
 In total, the released `yaml` file contains **four** templates.

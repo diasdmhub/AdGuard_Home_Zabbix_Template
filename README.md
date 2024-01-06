@@ -60,36 +60,39 @@ This template has been tested with AdGuard Home version `> 0.107` on an Asus RT-
 
 ### SETUP
 
-If the AdGuard Home web user is password protected, the client must use an authentication mechanism when sending requests to the server. Basic access authentication is the offered method. A client must include an `Authorization` HTTP header along with all requests:
-```
-Authorization: Basic BASE64_DATA
-```
-Where *`BASE64_DATA`* is a base64-encoded data for your *`username:password`* string.
+> **If the AdGuard Home web user is password protected, the client must use an authentication mechanism when sending requests to the server. Basic access authentication is the offered method. A client must include an `Authorization` HTTP header along with all requests:**
+> ```
+> Authorization: Basic BASE64_DATA
+> ```
+> **Where *`BASE64_DATA`* is a base64-encoded data for your *`username:password`* string.**
 
 <BR>
 
-**1.** After importing the template to Zabbix and creating AdGuard's host, encode **your** AdGuard Authorization string `username:password` to Base64. Examples:
+---
+1️⃣ After importing the template to Zabbix and creating AdGuard's host, encode **your** AdGuard Authorization string `username:password` to Base64. Examples:
   - Shell
-```shell
-echo -n 'username:password' | base64
-```
+> ```shell
+> echo -n 'username:password' | base64
+> ```
 
   - Python
-```python
-import base64
-string = 'username:password'
-base64.b64encode(bytes(string, 'utf-8'))
-```
+> ```python
+> import base64
+> string = 'username:password'
+> base64.b64encode(bytes(string, 'utf-8'))
+> ```
 
   - PowerShell
-```pwsh
-$string = 'username:password'
-[Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($string))
-```
+> ```pwsh
+> $string = 'username:password'
+> [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($string))
+> ```
 
 <BR>
 
-**2.** Copy and paste the encoded string into your host's macro `{$ADGUARD.AUTH}`.
+2️⃣ Copy and paste the encoded string into your host's macro `{$ADGUARD.AUTH}`.
+
+---
 
 <BR><BR>
 

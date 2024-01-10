@@ -47,6 +47,8 @@ In total, the released `yaml` file contains **four** templates.
 ### REQUIREMENTS
 
 - AdGuard Home
+  - Zabbix Agent required only for active monitoring
+  > _**The template uses the `system.run[*]` parameter for active monitoring with the Zabbix Agent**_
 
 <BR>
 

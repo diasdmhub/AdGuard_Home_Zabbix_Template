@@ -31,7 +31,7 @@ The main focus is on monitoring statistics from AdGuard Home.
 
 ### TEMPLATES
 
-For more flexibility, the release includes templates that cover **two monitoring methods**, one for native HTTP data retrieval and another for Zabbix Agent Active. Both methods provide the same monitoring items, but with different item types. **They should not be used together on the same host**.
+For more flexibility, the release includes templates that cover **two monitoring methods**, one for native HTTP data retrieval and another for Zabbix Agent Active. Both methods provide the same monitoring items, but with different item types. **They are not intended to be used together on the same host**.
 
 There are also **two independent template types**. One is for HTTP AdGuard Home general **status and statistics**, and the other is for **filter parameters** discovery. \
 In total, the released `yaml` file contains **four** templates.
@@ -48,14 +48,14 @@ In total, the released `yaml` file contains **four** templates.
 
 - AdGuard Home
   - Zabbix Agent required only for active monitoring
-  > _**The template uses the `system.run[*]` parameter for active monitoring with the Zabbix Agent**_
+  > _**The template uses the `system.run[*]` parameter for active monitoring with the Zabbix Agent. `AllowKey=system.run[*]` can be used to allow the agent to collect data locally.**_
 
 <BR>
 
 
 ### TESTED VERSION
 
-This template has been tested with AdGuard Home version `> 0.107` on an Asus RT-AX86U router running an [Asus Merlin](https://www.asuswrt-merlin.net) firmware. It should work with any recent version of AdGuard Home.
+This template has been tested with AdGuard Home version `> 0.107` on an Asus RT-AX86U router running an [Asus Merlin](https://www.asuswrt-merlin.net) firmware and Mikrotik RouterOS. It should work with any recent version of AdGuard Home.
 
 <BR>
 

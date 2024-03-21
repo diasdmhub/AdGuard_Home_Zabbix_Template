@@ -3,7 +3,7 @@
 <div align="right">
 
 ![License](https://img.shields.io/badge/License-GPL3-blue?logo=opensourceinitiative&logoColor=fff)
-![Version](https://img.shields.io/badge/Version-6410-blue?logo=AdGuard&color=0aa8d2)
+![Version](https://img.shields.io/badge/Version-6412-blue?logo=AdGuard&color=0aa8d2)
 
 </div>
 <BR>
@@ -135,6 +135,7 @@ This template has been tested with AdGuard Home version `> 0.107` on an Asus RT-
 
 | Name                                         |
 | -------------------------------------------- |
+| AdGuard Home Abnormally High Daily Queries   |
 | AdGuard Home Abnormally High Processing Time |
 | AdGuard Home Has NO DNS Queries              |
 | AdGuard Home Protection Stopped              |

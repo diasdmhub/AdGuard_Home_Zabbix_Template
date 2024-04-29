@@ -48,7 +48,8 @@ In total, the released `yaml` file contains **four** templates.
 
 - AdGuard Home
   - Zabbix Agent required only for active monitoring
-  > _**The template uses the `system.run[*]` key for active monitoring with the Zabbix Agent. The `AllowKey=system.run[*]` parameter can be enabled to allow the agent to collect data locally.**_
+  > - _**The template uses the `system.run[*]` key for active monitoring with the Zabbix Agent. The `AllowKey=system.run[*]` parameter must be enabled to allow the agent to collect data locally.**_
+  > - _**Accordingly, AdGuard Home must allow requests from itself when using an active Zabbix Agent.**_
 
 <BR>
 

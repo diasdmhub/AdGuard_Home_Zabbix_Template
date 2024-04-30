@@ -3,7 +3,7 @@
 <div align="right">
 
 ![License](https://img.shields.io/badge/License-GPL3-blue?logo=opensourceinitiative&logoColor=fff)
-![Version](https://img.shields.io/badge/Version-6412-blue?logo=AdGuard&color=0aa8d2)
+![Version](https://img.shields.io/badge/Version-6414-blue?logo=AdGuard&color=0aa8d2)
 
 </div>
 <BR>

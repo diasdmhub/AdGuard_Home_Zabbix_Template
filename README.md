@@ -3,7 +3,7 @@
 <div align="right">
 
 ![License](https://img.shields.io/badge/License-GPL3-blue?logo=opensourceinitiative&logoColor=fff)
-![Version](https://img.shields.io/badge/Version-6414-blue?logo=AdGuard&color=0aa8d2)
+![Version](https://img.shields.io/badge/Version-700-blue?logo=AdGuard&color=0aa8d2)
 
 </div>
 <BR>
@@ -72,7 +72,7 @@ This template has been tested with AdGuard Home version `> 0.107` on an Asus RT-
 <BR>
 
 ---
-1️⃣ After importing the template to Zabbix and creating AdGuard's host, encode **your** AdGuard Authorization string `username:password` to Base64. Examples:
+1️⃣ After importing the template to Zabbix and creating AdGuard's host, encode **your** AdGuard Authorization string `username:password` to Base64. See the examples bellow.
   - Shell
 > ```shell
 > echo -n 'username:password' | base64

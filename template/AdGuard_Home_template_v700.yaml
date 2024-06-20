@@ -149,7 +149,7 @@ zabbix_export:
                 and
                 last(/AdGuard Home Filters by HTTP/adguard.filter.status[{#FILTER.ID}],#1)=0
               name: 'AdGuard Home Filter not Updated in more than 7 days - {#FILTER.NAME}'
-              opdata: 'Filter Status: {#FILTER.ENABLED}'
+              opdata: 'Last update: {ITEM.LASTVALUE1}'
               url_name: 'AdGuard Home Web UI'
               url: '{$ADGUARD.WEB}://{HOST.CONN}:{$ADGUARD.PORT}'
               priority: WARNING
@@ -157,6 +157,9 @@ zabbix_export:
                 Indicates that the AdGuard Filter is enabled but not updated for more than 7 days
                 Check your filter configuration and the filters update interval
                 Filter URL - {#FILTER.URL}
+              dependencies:
+                - name: 'AdGuard Home Filter is Disabled - {#FILTER.NAME}'
+                  expression: 'last(/AdGuard Home Filters by HTTP/adguard.filter.status[{#FILTER.ID}],#1)=0'
               tags:
                 - tag: Last_update
                   value: delayed
@@ -333,7 +336,7 @@ zabbix_export:
                 and
                 last(/AdGuard Home Filters by Zabbix Agent Active/adguard.filter.status[{#FILTER.ID}],#1)=0
               name: 'AdGuard Home Filter not Updated in more than 7 days - {#FILTER.NAME}'
-              opdata: 'Filter Status: {#FILTER.ENABLED}'
+              opdata: 'Last update: {ITEM.LASTVALUE1}'
               url_name: 'AdGuard Home Web UI'
               url: '{$ADGUARD.WEB}://{HOST.CONN}:{$ADGUARD.PORT}'
               priority: WARNING
@@ -341,6 +344,9 @@ zabbix_export:
                 Indicates that the AdGuard Filter is enabled but not updated for more than 7 days
                 Check your filter configuration and the filters update interval
                 Filter URL - {#FILTER.URL}
+              dependencies:
+                - name: 'AdGuard Home Filter is Disabled - {#FILTER.NAME}'
+                  expression: 'last(/AdGuard Home Filters by Zabbix Agent Active/adguard.filter.status[{#FILTER.ID}],#1)=0'
               tags:
                 - tag: Last_update
                   value: delayed
@@ -530,6 +536,9 @@ zabbix_export:
               description: |
                 Indicates that there are no DNS queries in the last 3 checks
                 Queries per second is 0
+              dependencies:
+                - name: 'AdGuard Home Stopped'
+                  expression: 'avg(/AdGuard Home Stats by HTTP/adguard.status.run,#2)=0'
               tags:
                 - tag: Queries
                   value: absent
@@ -558,7 +567,7 @@ zabbix_export:
                 >
                 (baselinewma(/AdGuard Home Stats by HTTP/adguard.stats.queries.today,1h:now/h,"d",30) * 2)
               name: 'AdGuard Home Abnormally High Daily Queries'
-              opdata: 'Daily Queries Avg: {ITEM.LASTVALUE1}'
+              opdata: 'Previous Hour Avg: {ITEM.LASTVALUE1}'
               priority: AVERAGE
               description: 'Indicates that the previous hour average for daily queries is more than twice the last 30d baseline'
               tags:
@@ -856,6 +865,9 @@ zabbix_export:
               description: |
                 Indicates that there are no DNS queries in the last 3 checks
                 Queries per second is 0
+              dependencies:
+                - name: 'AdGuard Home Stopped'
+                  expression: 'avg(/AdGuard Home Stats by Zabbix Agent Active/adguard.status.run,#2)=0'
               tags:
                 - tag: Queries
                   value: absent
@@ -884,7 +896,7 @@ zabbix_export:
                 >
                 (baselinewma(/AdGuard Home Stats by Zabbix Agent Active/adguard.stats.queries.today,1h:now/h,"d",30) * 2)
               name: 'AdGuard Home Abnormally High Daily Queries'
-              opdata: 'Daily Queries Avg: {ITEM.LASTVALUE1}'
+              opdata: 'Previous Hour Avg: {ITEM.LASTVALUE1}'
               priority: AVERAGE
               description: 'Indicates that the previous hour average for daily queries is more than twice the last 30d baseline'
               tags:

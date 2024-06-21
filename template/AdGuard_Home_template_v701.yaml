@@ -52,6 +52,10 @@ zabbix_export:
           description: |
             Sum of all filter rules count
             This item depends on the discovered filter subscriptions
+          preprocessing:
+            - type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 1d
           tags:
             - tag: Filter
               value: rules_sum
@@ -115,6 +119,8 @@ zabbix_export:
               history: 30d
               params: '{#FILTER.ENABLED}'
               description: 'Filter subscription status. True of false'
+              valuemap:
+                name: 'AdGuard Status Filter'
               preprocessing:
                 - type: STR_REPLACE
                   parameters:
@@ -193,6 +199,14 @@ zabbix_export:
         - macro: '{$ADGUARD.WEB}'
           value: http
           description: 'Web protocol. Either "http" or "https"'
+      valuemaps:
+        - uuid: 0b44d0faa0d84a888563d2676be9da6d
+          name: 'AdGuard Status Filter'
+          mappings:
+            - value: '1'
+              newvalue: Enabled
+            - value: '0'
+              newvalue: Disabled
     - uuid: e6d12b9d8fd5460e9cd651d7103be49f
       template: 'AdGuard Home Filters by Zabbix Agent Active'
       name: 'AdGuard Home Filters by Zabbix Agent Active'
@@ -221,6 +235,10 @@ zabbix_export:
           description: |
             Sum of all filter rules count
             This item depends on the discovered filter subscriptions
+          preprocessing:
+            - type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 1d
           tags:
             - tag: Filter
               value: rules_sum
@@ -531,7 +549,7 @@ zabbix_export:
             - uuid: ad57492e69cf4fce8cddd3c61664b920
               expression: 'avg(/AdGuard Home Stats by HTTP/adguard.stats.queries.second,#3)=0'
               name: 'AdGuard Home Has NO DNS Queries'
-              opdata: 'Qps: {ITEM.LASTVALUE}'
+              opdata: 'Qps: {ITEM.VALUE}'
               priority: AVERAGE
               description: |
                 Indicates that there are no DNS queries in the last 3 checks

@@ -3,11 +3,11 @@
 <div align="right">
 
 [![License](https://img.shields.io/badge/License-GPL3-blue?logo=opensourceinitiative&logoColor=fff)](./LICENSE)
-[![Version](https://img.shields.io/badge/Version-701-blue?logo=AdGuard&color=0aa8d2)](https://github.com/diasdmhub/AdGuard_Home_Zabbix_Template/releases/tag/latest)
+[![Version](https://img.shields.io/badge/Version-702-blue?logo=zotero&color=0aa8d2)](https://github.com/diasdmhub/AdGuard_Home_Zabbix_Template/releases/tag/latest)
 
 </div>
-<BR>
 
+<BR>
 
 ### OVERVIEW
 
@@ -21,9 +21,13 @@ The main focus is on monitoring statistics from AdGuard Home.
 <BR>
 
 ---
+
 ### ➡️ [Download (latest)](https://github.com/diasdmhub/AdGuard_Home_Zabbix_Template/releases)
+
 ---
+
 #### ➡️ [*How to import templates*](https://www.zabbix.com/documentation/current/en/manual/xml_export_import/templates#importing)
+
 ---
 
 <BR>

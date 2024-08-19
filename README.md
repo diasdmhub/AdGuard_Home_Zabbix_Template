@@ -132,6 +132,8 @@ This template has been tested with AdGuard Home version `> 0.107` on an Asus RT-
 | AdGuard Home Statistics: AdGuard Home Total DNS Blocks Today      |
 | AdGuard Home Statistics: AdGuard Home Total DNS Queries by Period |
 | AdGuard Home Statistics: AdGuard Home Total DNS Queries Today     |
+| AdGuard Home DNS Queries Today Block Rate                         |
+| AdGuard Home DNS Queries Today Period Rate                        |
 
 <BR>
 

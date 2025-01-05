@@ -51,9 +51,10 @@ In total, the released `yaml` file contains **four** templates.
 ### REQUIREMENTS
 
 - AdGuard Home
-  - Zabbix Agent required only for active monitoring
+  - Zabbix Agent required only for active monitoring.
   > - _**The template uses the `system.run[*]` key for active monitoring with the Zabbix Agent. [The `AllowKey=system.run[*]` parameter](https://www.zabbix.com/documentation/current/en/manual/config/items/restrict_checks) must be enabled to allow the agent to collect data locally.**_
   > - _**Accordingly, AdGuard Home must allow requests from itself when using an active Zabbix Agent.**_
+  - Although it is [optional for HTTP items](https://www.zabbix.com/documentation/current/en/manual/config/hosts/host), **a host interface is required** because the template [HTTP items](https://www.zabbix.com/documentation/current/en/manual/config/items/itemtypes/http) use the `{HOST.CONN}` macro. It is recommended to configure the AdGuard IP or DNS in the interface field of type "Agent". [_#3_](https://github.com/diasdmhub/AdGuard_Home_Zabbix_Template/issues/3)
 
 <BR>
 
@@ -76,7 +77,7 @@ This template has been tested with AdGuard Home version `> 0.107` on an Asus RT-
 <BR>
 
 ---
-1️⃣ After importing the template to Zabbix and creating AdGuard's host, encode **your** AdGuard Authorization string `username:password` to Base64. See the examples bellow.
+1️⃣ After importing the template to Zabbix and creating AdGuard's host (_see [requirements](#requirements)_), encode **your** AdGuard Authorization string `username:password` to Base64. See the examples bellow.
   - Shell
 > ```shell
 > echo -n 'username:password' | base64

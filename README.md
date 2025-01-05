@@ -55,7 +55,7 @@ In total, the released `yaml` file contains **four** templates.
   - Zabbix Agent required only for active monitoring.
   > - _**The template uses the `system.run[*]` key for active monitoring with the Zabbix Agent. [The `AllowKey=system.run[*]` parameter](https://www.zabbix.com/documentation/current/en/manual/config/items/restrict_checks) must be enabled to allow the agent to collect data locally.**_
   > - _**Accordingly, AdGuard Home must allow requests from itself when using an active Zabbix Agent.**_
-  - Although it is [optional for HTTP items](https://www.zabbix.com/documentation/current/en/manual/config/hosts/host), **a host interface is required** because the template [HTTP items](https://www.zabbix.com/documentation/current/en/manual/config/items/itemtypes/http) use the `{HOST.CONN}` macro. It is recommended to configure the AdGuard IP or DNS in the interface field of type "Agent". [_#3_](https://github.com/diasdmhub/AdGuard_Home_Zabbix_Template/issues/3)
+  - Although it is [optional for HTTP items](https://www.zabbix.com/documentation/current/en/manual/config/hosts/host), **a host interface is required** because the template [HTTP items](https://www.zabbix.com/documentation/current/en/manual/config/items/itemtypes/http) use the [`{HOST.CONN}`](https://www.zabbix.com/documentation/current/en/manual/appendix/macros/supported_by_location) macro. It is recommended to configure the AdGuard IP or DNS in the interface field of type "Agent". [_#3_](https://github.com/diasdmhub/AdGuard_Home_Zabbix_Template/issues/3)
 
 <BR>
 

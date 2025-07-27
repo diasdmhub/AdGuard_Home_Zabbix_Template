@@ -1,4 +1,3 @@
-
 # Zabbix Template for AdGuard Home
 
 <div align="right">
@@ -76,6 +75,7 @@ This template has been tested with AdGuard Home version `> 0.107` on an Asus RT-
 ---
 
 1️⃣ After importing the template to Zabbix and creating AdGuard's host (_see [requirements](#requirements)_), encode **your** AdGuard Authorization string `username:password` to Base64. See the examples bellow.
+
   - Shell
 > ```shell
 > echo -n 'username:password' | base64
@@ -104,13 +104,13 @@ This template has been tested with AdGuard Home version `> 0.107` on an Asus RT-
 
 ### MACROS USED
 
-| Macro                | Default Value | Description                                                                                    |
-| -------------------- | ------------- | ---------------------------------------------------------------------------------------------- |
-| {$ADGUARD.AUTH}      |               | HTTP header `Basic` authorization string. A Base64 encoded string of your `username:password`. |
-| {$ADGUARD.PORT}      | 3000          | AdGuard Home HTTP port                                                                         |
-| {$ADGUARD.WEB}       | http          | Web protocol. Either "http" or "https"                                                         |
-| {$ADGUARD.STAT.DAYS} | 30            | The configured statistics period in days (*AdGuard Home Stats only*)                           |
-| {$ADGUARD.FILTER_ENABLED} | true     | True to discover only enabled filters, leave empty to discover all filters (*AdGuard Home Filters only*) |
+| Macro                     | Default Value | Description                                                                                              |
+| ------------------------- | ------------- | -------------------------------------------------------------------------------------------------------- |
+| {$ADGUARD.AUTH}           |               | HTTP header `Basic` authorization string. A Base64 encoded string of your `username:password`.           |
+| {$ADGUARD.PORT}           | 3000          | AdGuard Home HTTP port                                                                                   |
+| {$ADGUARD.WEB}            | http          | Web protocol. Either "http" or "https"                                                                   |
+| {$ADGUARD.STAT.DAYS}      | 30            | The configured statistics period in days (*AdGuard Home Stats only*)                                     |
+| {$ADGUARD.FILTER_ENABLED} | true          | True to discover only enabled filters, leave empty to discover all filters (*AdGuard Home Filters only*) |
 
 <BR>
 
@@ -137,20 +137,24 @@ This template has been tested with AdGuard Home version `> 0.107` on an Asus RT-
 
 ### TRIGGERS (*AdGuard Home Stats*)
 
-| Name | | -------------------------------------------- | | AdGuard Home
-Abnormally High Daily Queries | | AdGuard Home Abnormally High Processing Time |
-| AdGuard Home Has NO DNS Queries | | AdGuard Home Protection Stopped | |
-AdGuard Home Stopped | | AdGuard Home Update Available | | AdGuard Home Version
-Changed |
+| Name                                         |
+| -------------------------------------------- |
+| AdGuard Home Abnormally High Daily Queries   |
+| AdGuard Home Abnormally High Processing Time |
+| AdGuard Home Has NO DNS Queries              |
+| AdGuard Home Protection Stopped              |
+| AdGuard Home Stopped                         |
+| AdGuard Home Update Available                |
+| AdGuard Home Version Changed                 |
 
 <BR>
 
 ### ITEMS (*AdGuard Home Filters*)
 
-| Name                                                              |
-| ----------------------------------------------------------------- |
-| AdGuard Home Filters                                              |
-| AdGuard Home Filter Rules Count Sum                               |
+| Name                                |
+| ----------------------------------- |
+| AdGuard Home Filters                |
+| AdGuard Home Filter Rules Count Sum |
 
 <BR>
 
@@ -182,4 +186,5 @@ Changed |
 <BR>
 
 ### DASHBOARD EXAMPLE
+
 ![Dashboard example](images/dash_example1.png)

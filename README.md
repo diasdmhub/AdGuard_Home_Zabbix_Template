@@ -4,7 +4,7 @@
 <div align="right">
 
 [![License](https://img.shields.io/badge/License-GPL3-blue?logo=opensourceinitiative&logoColor=fff)](./LICENSE)
-[![Version](https://img.shields.io/badge/Version-702-blue?logo=zotero&color=0aa8d2)](https://github.com/diasdmhub/AdGuard_Home_Zabbix_Template/releases/tag/latest)
+[![Version](https://img.shields.io/badge/Version-740-blue?logo=zotero&color=0aa8d2)](https://github.com/diasdmhub/AdGuard_Home_Zabbix_Template/releases/tag/latest)
 
 </div>
 

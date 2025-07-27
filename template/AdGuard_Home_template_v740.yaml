@@ -1,18 +1,18 @@
 zabbix_export:
-  version: "7.0"
+  version: '7.4'
   template_groups:
     - uuid: a571c0d144b14fd4a87a9d9b2aa9fcd6
       name: Templates/Applications
   templates:
     - uuid: fd8c8d4372e942218a50add40c1e405f
-      template: "AdGuard Home Filters by HTTP"
-      name: "AdGuard Home Filters by HTTP"
+      template: 'AdGuard Home Filters by HTTP'
+      name: 'AdGuard Home Filters by HTTP'
       description: |
         AdGuard Home template for basic filter parameters.
-
+        
         GitHub: https://github.com/AdguardTeam/AdGuardHome
         API documentation: https://github.com/AdguardTeam/AdGuardHome/tree/master/openapi
-
+        
         Access the documentation with https://editor.swagger.io by importing the openapi.yaml file.
       vendor:
         name: diasdm
@@ -21,33 +21,33 @@ zabbix_export:
         - name: Templates/Applications
       items:
         - uuid: d47808a351ea4981a6e6b0b6ba7e5362
-          name: "AdGuard Home Filters"
+          name: 'AdGuard Home Filters'
           type: HTTP_AGENT
           key: adguard.filters
           delay: 1h
-          history: "0"
+          history: '0'
           value_type: TEXT
-          description: "Raw filtering data"
+          description: 'Raw filtering data'
           preprocessing:
             - type: JSONPATH
               parameters:
                 - $.filters
           timeout: 3s
-          url: "{$ADGUARD.WEB}://{HOST.CONN}:{$ADGUARD.PORT}/control/filtering/status"
+          url: '{$ADGUARD.WEB}://{HOST.CONN}:{$ADGUARD.PORT}/control/filtering/status'
           headers:
             - name: Authorization
-              value: "Basic {$ADGUARD.AUTH}"
+              value: 'Basic {$ADGUARD.AUTH}'
           tags:
             - tag: Filter
-              value: raw
+              value: json
         - uuid: d6ac78fa7d5b48a4bb927209e70d036b
-          name: "AdGuard Home Filter Rules Count Sum"
+          name: 'AdGuard Home Filter Rules Count Sum'
           type: CALCULATED
           key: adguard.filters.rules.sum
           delay: 1h
           history: 30d
-          trends: "0"
-          params: "sum(last_foreach(//adguard.filter.rules[*]))"
+          trends: '0'
+          params: 'sum(last_foreach(//adguard.filter.rules[*]))'
           description: |
             Sum of all filter rules count
             This item depends on the discovered filter subscriptions
@@ -60,33 +60,33 @@ zabbix_export:
               value: rules_sum
       discovery_rules:
         - uuid: 47fd36f45e2d4acc9b82e7273cadc805
-          name: "AdGuard Filters Discovery"
+          name: 'AdGuard Filters Discovery'
           type: DEPENDENT
           key: adguard.filters.discovery
           filter:
             conditions:
-              - macro: "{#FILTER.ENABLED}"
-                value: "{$ADGUARD.FILTER_ENABLED}"
+              - macro: '{#FILTER.ENABLED}'
+                value: '{$ADGUARD.FILTER_ENABLED}'
           lifetime: 1d
-          description: "Filter parameters discovery for filter statistics"
+          description: 'Filter parameters discovery for filter statistics'
           item_prototypes:
             - uuid: 118eb7373160489aaa2036aa095713d5
-              name: "AdGuard Home Filter Last Update Time - {#FILTER.NAME}"
+              name: 'AdGuard Home Filter Last Update Time - {#FILTER.NAME}'
               type: SCRIPT
-              key: "adguard.filter.lastupdate[{#FILTER.ID}]"
+              key: 'adguard.filter.lastupdate[{#FILTER.ID}]'
               delay: 1h
               history: 30d
-              trends: "0"
+              trends: '0'
               units: uptime
               params: |
                 // Get the current date and time and convert to seconds
                 var currentDate = new Date();
                 var currentSeconds = Math.round(currentDate.getTime() / 1000);
-
+                
                 // Convert original date-time to seconds
                 var filterDate = new Date("{#FILTER.LASTUPDATE}");
                 var targetSeconds = Math.round(filterDate.getTime() / 1000);
-
+                
                 // Calculate the time difference in seconds
                 var secondsDiff = currentSeconds - targetSeconds;
                 return secondsDiff;
@@ -98,45 +98,45 @@ zabbix_export:
                 - tag: Filter
                   value: last_update
             - uuid: d5714bc8467543af88fb467ec475ba3f
-              name: "AdGuard Home Filter Rules Count - {#FILTER.NAME}"
+              name: 'AdGuard Home Filter Rules Count - {#FILTER.NAME}'
               type: CALCULATED
-              key: "adguard.filter.rules[{#FILTER.ID}]"
+              key: 'adguard.filter.rules[{#FILTER.ID}]'
               delay: 1h
               history: 30d
-              params: "{#FILTER.RULES}"
-              description: "Filter subscription rules count"
+              params: '{#FILTER.RULES}'
+              description: 'Filter subscription rules count'
               tags:
                 - tag: Filter
                   value: rules
             - uuid: 7b18045cdba647799e7e5e5272d0a92e
-              name: "AdGuard Home Filter Status - {#FILTER.NAME}"
+              name: 'AdGuard Home Filter Status - {#FILTER.NAME}'
               type: CALCULATED
-              key: "adguard.filter.status[{#FILTER.ID}]"
+              key: 'adguard.filter.status[{#FILTER.ID}]'
               delay: 1h
               history: 30d
-              params: "{#FILTER.ENABLED}"
-              description: "Filter subscription status. True of false"
+              params: '{#FILTER.ENABLED}'
+              description: 'Filter subscription status. True of false'
               valuemap:
-                name: "AdGuard Status Filter"
+                name: 'AdGuard Status Filter'
               preprocessing:
                 - type: STR_REPLACE
                   parameters:
-                    - "true"
-                    - "1"
+                    - 'true'
+                    - '1'
                 - type: STR_REPLACE
                   parameters:
-                    - "false"
-                    - "0"
+                    - 'false'
+                    - '0'
               tags:
                 - tag: Filter
                   value: status
               trigger_prototypes:
                 - uuid: 5612cc67d4044ec587d60e56522b1944
-                  expression: "last(/AdGuard Home Filters by HTTP/adguard.filter.status[{#FILTER.ID}],#1)=0"
-                  name: "AdGuard Home Filter is Disabled - {#FILTER.NAME}"
-                  opdata: "Filter Status: {#FILTER.ENABLED}"
-                  url_name: "AdGuard Home Web UI"
-                  url: "{$ADGUARD.WEB}://{HOST.CONN}:{$ADGUARD.PORT}"
+                  expression: 'last(/AdGuard Home Filters by HTTP/adguard.filter.status[{#FILTER.ID}],#1)=0'
+                  name: 'AdGuard Home Filter is Disabled - {#FILTER.NAME}'
+                  opdata: 'Filter Status: {#FILTER.ENABLED}'
+                  url_name: 'AdGuard Home Web UI'
+                  url: '{$ADGUARD.WEB}://{HOST.CONN}:{$ADGUARD.PORT}'
                   priority: INFO
                   description: |
                     Indicates this AdGuard Filter is disabled
@@ -151,69 +151,73 @@ zabbix_export:
                 last(/AdGuard Home Filters by HTTP/adguard.filter.lastupdate[{#FILTER.ID}],#1)>604800
                 and
                 last(/AdGuard Home Filters by HTTP/adguard.filter.status[{#FILTER.ID}],#1)=0
-              name: "AdGuard Home Filter not Updated in more than 7 days - {#FILTER.NAME}"
-              opdata: "Last update: {ITEM.LASTVALUE1}"
-              url_name: "AdGuard Home Web UI"
-              url: "{$ADGUARD.WEB}://{HOST.CONN}:{$ADGUARD.PORT}"
+              name: 'AdGuard Home Filter not Updated in more than 7 days - {#FILTER.NAME}'
+              opdata: 'Last update: {ITEM.LASTVALUE1}'
+              url_name: 'AdGuard Home Web UI'
+              url: '{$ADGUARD.WEB}://{HOST.CONN}:{$ADGUARD.PORT}'
               priority: WARNING
               description: |
                 Indicates that the AdGuard Filter is enabled but not updated for more than 7 days
                 Check your filter configuration and the filters update interval
                 Filter URL - {#FILTER.URL}
               dependencies:
-                - name: "AdGuard Home Filter is Disabled - {#FILTER.NAME}"
-                  expression: "last(/AdGuard Home Filters by HTTP/adguard.filter.status[{#FILTER.ID}],#1)=0"
+                - name: 'AdGuard Home Filter is Disabled - {#FILTER.NAME}'
+                  expression: 'last(/AdGuard Home Filters by HTTP/adguard.filter.status[{#FILTER.ID}],#1)=0'
               tags:
                 - tag: Last_update
                   value: delayed
           master_item:
             key: adguard.filters
           lld_macro_paths:
-            - lld_macro: "{#FILTER.ENABLED}"
+            - lld_macro: '{#FILTER.ENABLED}'
               path: $.enabled
-            - lld_macro: "{#FILTER.ID}"
+            - lld_macro: '{#FILTER.ID}'
               path: $.id
-            - lld_macro: "{#FILTER.LASTUPDATE}"
+            - lld_macro: '{#FILTER.LASTUPDATE}'
               path: $.last_updated
-            - lld_macro: "{#FILTER.NAME}"
+            - lld_macro: '{#FILTER.NAME}'
               path: $.name
-            - lld_macro: "{#FILTER.RULES}"
+            - lld_macro: '{#FILTER.RULES}'
               path: $.rules_count
-            - lld_macro: "{#FILTER.URL}"
+            - lld_macro: '{#FILTER.URL}'
               path: $.url
+          preprocessing:
+            - type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 1d
       tags:
         - tag: Adguard
           value: Filter
       macros:
-        - macro: "{$ADGUARD.AUTH}"
+        - macro: '{$ADGUARD.AUTH}'
           description: 'HTTP header Basic authorization string. A Base64 encoded string of your username:password. Use "echo -n ''<user>:<pass>'' | base64" to retrieve the authorization string'
-        - macro: "{$ADGUARD.FILTER_ENABLED}"
-          value: "true"
-          description: "True to discover only enabled filters, leave empty to discover all filters"
-        - macro: "{$ADGUARD.PORT}"
-          value: "3000"
-          description: "AdGuard Home HTTP port"
-        - macro: "{$ADGUARD.WEB}"
+        - macro: '{$ADGUARD.FILTER_ENABLED}'
+          value: 'true'
+          description: 'True to discover only enabled filters, leave empty to discover all filters'
+        - macro: '{$ADGUARD.PORT}'
+          value: '3000'
+          description: 'AdGuard Home HTTP port'
+        - macro: '{$ADGUARD.WEB}'
           value: http
           description: 'Web protocol. Either "http" or "https"'
       valuemaps:
         - uuid: 0b44d0faa0d84a888563d2676be9da6d
-          name: "AdGuard Status Filter"
+          name: 'AdGuard Status Filter'
           mappings:
-            - value: "1"
+            - value: '1'
               newvalue: Enabled
-            - value: "0"
+            - value: '0'
               newvalue: Disabled
     - uuid: e6d12b9d8fd5460e9cd651d7103be49f
-      template: "AdGuard Home Filters by Zabbix Agent Active"
-      name: "AdGuard Home Filters by Zabbix Agent Active"
+      template: 'AdGuard Home Filters by Zabbix Agent Active'
+      name: 'AdGuard Home Filters by Zabbix Agent Active'
       description: |
         AdGuard Home template for basic filter parameters.
         Uses the Zabbix Agent in active mode to monitor AdGuard Home mainly for installations behind a blocking system.
-
+        
         GitHub: https://github.com/AdguardTeam/AdGuardHome
         API documentation: https://github.com/AdguardTeam/AdGuardHome/tree/master/openapi
-
+        
         Access the documentation with https://editor.swagger.io by importing the openapi.yaml file.
       vendor:
         name: diasdm
@@ -222,13 +226,13 @@ zabbix_export:
         - name: Templates/Applications
       items:
         - uuid: d48f962a2e174046b9f6216548917455
-          name: "AdGuard Home Filter Rules Count Sum"
+          name: 'AdGuard Home Filter Rules Count Sum'
           type: CALCULATED
           key: adguard.filters.rules.sum
           delay: 1h
           history: 30d
-          trends: "0"
-          params: "sum(last_foreach(//adguard.filter.rules[*]))"
+          trends: '0'
+          params: 'sum(last_foreach(//adguard.filter.rules[*]))'
           description: |
             Sum of all filter rules count
             This item depends on the discovered filter subscriptions
@@ -240,36 +244,36 @@ zabbix_export:
             - tag: Filter
               value: rules_sum
         - uuid: ec591d1f56fc41f78f1af57970f53c87
-          name: "AdGuard Home Filters"
+          name: 'AdGuard Home Filters'
           type: ZABBIX_ACTIVE
           key: 'system.run["curl -s -S -H ''Authorization:Basic {$ADGUARD.AUTH}'' {$ADGUARD.WEB}://{HOST.CONN}:{$ADGUARD.PORT}/control/filtering/status"]'
           delay: 1h
-          history: "0"
+          history: '0'
           value_type: TEXT
-          description: "Raw filtering parameters"
+          description: 'Raw filtering parameters'
           preprocessing:
             - type: JSONPATH
               parameters:
                 - $.filters
           tags:
             - tag: Filter
-              value: raw
+              value: json
       discovery_rules:
         - uuid: ca1e935e2a7f40579b5ff434debc2c04
-          name: "AdGuard Home Filters Discovery"
+          name: 'AdGuard Home Filters Discovery'
           type: DEPENDENT
           key: adguard.filters.discovery
           filter:
             conditions:
-              - macro: "{#FILTER.ENABLED}"
-                value: "{$ADGUARD.FILTER_ENABLED}"
+              - macro: '{#FILTER.ENABLED}'
+                value: '{$ADGUARD.FILTER_ENABLED}'
           lifetime: 1d
-          description: "Filtering parameters discovery for filter statistics"
+          description: 'Filtering parameters discovery for filter statistics'
           item_prototypes:
             - uuid: 6307cc6d69134b60b7a73132aa186f33
-              name: "AdGuard Home Filter Last Update Time - {#FILTER.NAME}"
+              name: 'AdGuard Home Filter Last Update Time - {#FILTER.NAME}'
               type: SCRIPT
-              key: "adguard.filter.lastupdate[{#FILTER.ID}]"
+              key: 'adguard.filter.lastupdate[{#FILTER.ID}]'
               delay: 1h
               history: 30d
               units: uptime
@@ -277,11 +281,11 @@ zabbix_export:
                 // Get the current date and time and convert to seconds
                 var currentDate = new Date();
                 var currentSeconds = Math.round(currentDate.getTime() / 1000);
-
+                
                 // Convert original date-time to seconds
                 var filterDate = new Date("{#FILTER.LASTUPDATE}");
                 var targetSeconds = Math.round(filterDate.getTime() / 1000);
-
+                
                 // Calculate the time difference in seconds
                 var secondsDiff = currentSeconds - targetSeconds;
                 return secondsDiff;
@@ -293,46 +297,46 @@ zabbix_export:
                 - tag: Filter
                   value: last_update
             - uuid: 7944bf9f87dd48d5a434bdd3d7bdbf7c
-              name: "AdGuard Home Filter Rules Count - {#FILTER.NAME}"
+              name: 'AdGuard Home Filter Rules Count - {#FILTER.NAME}'
               type: CALCULATED
-              key: "adguard.filter.rules[{#FILTER.ID}]"
+              key: 'adguard.filter.rules[{#FILTER.ID}]'
               delay: 1h
               history: 30d
-              params: "{#FILTER.RULES}"
-              description: "Filter subscription rules count"
+              params: '{#FILTER.RULES}'
+              description: 'Filter subscription rules count'
               tags:
                 - tag: Filter
                   value: rules
             - uuid: aab368de6d56436eb3a35dffc6ac951a
-              name: "AdGuard Home Filter Status - {#FILTER.NAME}"
+              name: 'AdGuard Home Filter Status - {#FILTER.NAME}'
               type: CALCULATED
-              key: "adguard.filter.status[{#FILTER.ID}]"
+              key: 'adguard.filter.status[{#FILTER.ID}]'
               delay: 1h
               history: 7d
-              trends: "0"
-              params: "{#FILTER.ENABLED}"
-              description: "Filter subscription status. True of false"
+              trends: '0'
+              params: '{#FILTER.ENABLED}'
+              description: 'Filter subscription status. True of false'
               valuemap:
-                name: "AdGuard Status Filter"
+                name: 'AdGuard Status Filter'
               preprocessing:
                 - type: STR_REPLACE
                   parameters:
-                    - "true"
-                    - "1"
+                    - 'true'
+                    - '1'
                 - type: STR_REPLACE
                   parameters:
-                    - "false"
-                    - "0"
+                    - 'false'
+                    - '0'
               tags:
                 - tag: Filter
                   value: status
               trigger_prototypes:
                 - uuid: d921af315f38428ca7792b72a77738ec
-                  expression: "last(/AdGuard Home Filters by Zabbix Agent Active/adguard.filter.status[{#FILTER.ID}],#1)=0"
-                  name: "AdGuard Home Filter is Disabled - {#FILTER.NAME}"
-                  opdata: "Filter Status: {#FILTER.ENABLED}"
-                  url_name: "AdGuard Home Web UI"
-                  url: "{$ADGUARD.WEB}://{HOST.CONN}:{$ADGUARD.PORT}"
+                  expression: 'last(/AdGuard Home Filters by Zabbix Agent Active/adguard.filter.status[{#FILTER.ID}],#1)=0'
+                  name: 'AdGuard Home Filter is Disabled - {#FILTER.NAME}'
+                  opdata: 'Filter Status: {#FILTER.ENABLED}'
+                  url_name: 'AdGuard Home Web UI'
+                  url: '{$ADGUARD.WEB}://{HOST.CONN}:{$ADGUARD.PORT}'
                   priority: INFO
                   description: |
                     Indicates that the AdGuard Filter is disabled
@@ -347,68 +351,72 @@ zabbix_export:
                 last(/AdGuard Home Filters by Zabbix Agent Active/adguard.filter.lastupdate[{#FILTER.ID}],#1)>604800
                 and
                 last(/AdGuard Home Filters by Zabbix Agent Active/adguard.filter.status[{#FILTER.ID}],#1)=0
-              name: "AdGuard Home Filter not Updated in more than 7 days - {#FILTER.NAME}"
-              opdata: "Last update: {ITEM.LASTVALUE1}"
-              url_name: "AdGuard Home Web UI"
-              url: "{$ADGUARD.WEB}://{HOST.CONN}:{$ADGUARD.PORT}"
+              name: 'AdGuard Home Filter not Updated in more than 7 days - {#FILTER.NAME}'
+              opdata: 'Last update: {ITEM.LASTVALUE1}'
+              url_name: 'AdGuard Home Web UI'
+              url: '{$ADGUARD.WEB}://{HOST.CONN}:{$ADGUARD.PORT}'
               priority: WARNING
               description: |
                 Indicates that the AdGuard Filter is enabled but not updated for more than 7 days
                 Check your filter configuration and the filters update interval
                 Filter URL - {#FILTER.URL}
               dependencies:
-                - name: "AdGuard Home Filter is Disabled - {#FILTER.NAME}"
-                  expression: "last(/AdGuard Home Filters by Zabbix Agent Active/adguard.filter.status[{#FILTER.ID}],#1)=0"
+                - name: 'AdGuard Home Filter is Disabled - {#FILTER.NAME}'
+                  expression: 'last(/AdGuard Home Filters by Zabbix Agent Active/adguard.filter.status[{#FILTER.ID}],#1)=0'
               tags:
                 - tag: Last_update
                   value: delayed
           master_item:
             key: 'system.run["curl -s -S -H ''Authorization:Basic {$ADGUARD.AUTH}'' {$ADGUARD.WEB}://{HOST.CONN}:{$ADGUARD.PORT}/control/filtering/status"]'
           lld_macro_paths:
-            - lld_macro: "{#FILTER.ENABLED}"
+            - lld_macro: '{#FILTER.ENABLED}'
               path: $.enabled
-            - lld_macro: "{#FILTER.ID}"
+            - lld_macro: '{#FILTER.ID}'
               path: $.id
-            - lld_macro: "{#FILTER.LASTUPDATE}"
+            - lld_macro: '{#FILTER.LASTUPDATE}'
               path: $.last_updated
-            - lld_macro: "{#FILTER.NAME}"
+            - lld_macro: '{#FILTER.NAME}'
               path: $.name
-            - lld_macro: "{#FILTER.RULES}"
+            - lld_macro: '{#FILTER.RULES}'
               path: $.rules_count
-            - lld_macro: "{#FILTER.URL}"
+            - lld_macro: '{#FILTER.URL}'
               path: $.url
+          preprocessing:
+            - type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 1d
       tags:
         - tag: Adguard
           value: Filter
       macros:
-        - macro: "{$ADGUARD.AUTH}"
+        - macro: '{$ADGUARD.AUTH}'
           description: 'HTTP header Basic authorization string. A Base64 encoded string of your username:password. Use "echo -n ''<user>:<pass>'' | base64" to retrieve the authorization string'
-        - macro: "{$ADGUARD.FILTER_ENABLED}"
-          value: "true"
-          description: "True to discover only enabled filters, leave empty to discover all filters"
-        - macro: "{$ADGUARD.PORT}"
-          value: "3000"
-          description: "AdGuard Home HTTP port"
-        - macro: "{$ADGUARD.WEB}"
+        - macro: '{$ADGUARD.FILTER_ENABLED}'
+          value: 'true'
+          description: 'True to discover only enabled filters, leave empty to discover all filters'
+        - macro: '{$ADGUARD.PORT}'
+          value: '3000'
+          description: 'AdGuard Home HTTP port'
+        - macro: '{$ADGUARD.WEB}'
           value: http
           description: 'Web protocol. Either "http" or "https"'
       valuemaps:
         - uuid: c0f9e152d7c64541a250ef9999d21798
-          name: "AdGuard Status Filter"
+          name: 'AdGuard Status Filter'
           mappings:
-            - value: "1"
+            - value: '1'
               newvalue: Enabled
-            - value: "0"
+            - value: '0'
               newvalue: Disabled
     - uuid: 9c24037f526c4d0f9e1f5d74c9b21e7f
-      template: "AdGuard Home Stats by HTTP"
-      name: "AdGuard Home Stats by HTTP"
+      template: 'AdGuard Home Stats by HTTP'
+      name: 'AdGuard Home Stats by HTTP'
       description: |
         AdGuard Home template for general statistics.
-
+        
         GitHub: https://github.com/AdguardTeam/AdGuardHome
         API documentation: https://github.com/AdguardTeam/AdGuardHome/tree/master/openapi
-
+        
         Access the documentation with https://editor.swagger.io by importing the openapi.yaml file.
       vendor:
         name: diasdm
@@ -417,27 +425,27 @@ zabbix_export:
         - name: Templates/Applications
       items:
         - uuid: f7b16a25866c480e8fa032fdc05e264a
-          name: "AdGuard Home Statistics"
+          name: 'AdGuard Home Statistics'
           type: HTTP_AGENT
           key: adguard.stats
           delay: 5m
-          history: "0"
+          history: '0'
           value_type: TEXT
-          description: "Raw DNS server statistics"
+          description: 'Raw DNS server statistics'
           timeout: 3s
-          url: "{$ADGUARD.WEB}://{HOST.CONN}:{$ADGUARD.PORT}/control/stats"
+          url: '{$ADGUARD.WEB}://{HOST.CONN}:{$ADGUARD.PORT}/control/stats'
           headers:
             - name: Authorization
-              value: "Basic {$ADGUARD.AUTH}"
+              value: 'Basic {$ADGUARD.AUTH}'
           tags:
             - tag: Statistics
-              value: raw
+              value: json
         - uuid: 02a799acca13471e96d47e8065332ca0
-          name: "AdGuard Home Total DNS Blocks by Period"
+          name: 'AdGuard Home Total DNS Blocks by Period'
           type: DEPENDENT
           key: adguard.stats.blocked.period
           history: 30d
-          description: "The number of DNS requests blocked by filtering rules for the configure period, {$ADGUARD.STAT.DAYS}"
+          description: 'The number of DNS requests blocked by filtering rules for the configure period, {$ADGUARD.STAT.DAYS}'
           preprocessing:
             - type: JSONPATH
               parameters:
@@ -450,37 +458,37 @@ zabbix_export:
             - tag: Statistics
               value: blocks
         - uuid: 5e59016336db46b6a292b036c8123c5c
-          name: "AdGuard Home DNS Queries Period Block Rate"
+          name: 'AdGuard Home DNS Queries Period Block Rate'
           type: CALCULATED
           key: adguard.stats.blocked.period.rate
           delay: 5m
           history: 7d
           value_type: FLOAT
-          units: "%"
+          units: '%'
           params: |
             last(//adguard.stats.blocked.period,#1)
             /
             last(//adguard.stats.queries.period,#1)
-          description: "Query block rate by period"
+          description: 'Query block rate by period'
           preprocessing:
             - type: MULTIPLIER
               parameters:
-                - "100"
+                - '100'
           tags:
             - tag: Queries
               value: period
             - tag: Statistics
               value: queries
         - uuid: 17964c5c20c94d0084ce1f9a78419217
-          name: "AdGuard Home Total DNS Blocks Today"
+          name: 'AdGuard Home Total DNS Blocks Today'
           type: DEPENDENT
           key: adguard.stats.blocked.today
           history: 30d
-          description: "The number of DNS requests blocked by filtering rules"
+          description: 'The number of DNS requests blocked by filtering rules'
           preprocessing:
             - type: JSONPATH
               parameters:
-                - "$.blocked_filtering[-1]"
+                - '$.blocked_filtering[-1]'
           master_item:
             key: adguard.stats
           tags:
@@ -489,35 +497,35 @@ zabbix_export:
             - tag: Statistics
               value: blocks
         - uuid: 2d335d23bbc643d4b4558adf431f1283
-          name: "AdGuard Home DNS Queries Today Block Rate"
+          name: 'AdGuard Home DNS Queries Today Block Rate'
           type: CALCULATED
           key: adguard.stats.blocked.today.rate
           delay: 5m
           history: 7d
           value_type: FLOAT
-          units: "%"
+          units: '%'
           params: |
             last(//adguard.stats.blocked.today,#1)
             /
             last(//adguard.stats.queries.today,#1)
-          description: "Daily query block rate"
+          description: 'Daily query block rate'
           preprocessing:
             - type: MULTIPLIER
               parameters:
-                - "100"
+                - '100'
           tags:
             - tag: Queries
               value: today
             - tag: Statistics
               value: queries
         - uuid: 2201cc7d8bab42d498e254a1afec9568
-          name: "AdGuard Home Average Processing Time"
+          name: 'AdGuard Home Average Processing Time'
           type: DEPENDENT
           key: adguard.stats.processing.time
           history: 30d
           value_type: FLOAT
           units: s
-          description: "Average time in seconds on processing a DNS request"
+          description: 'Average time in seconds on processing a DNS request'
           preprocessing:
             - type: JSONPATH
               parameters:
@@ -533,19 +541,19 @@ zabbix_export:
                 trendavg(/AdGuard Home Stats by HTTP/adguard.stats.processing.time,1h:now/h)
                 >
                 (baselinewma(/AdGuard Home Stats by HTTP/adguard.stats.processing.time,1h:now/h,"d",30) * 2)
-              name: "AdGuard Home Abnormally High Processing Time"
-              opdata: "Processing Time: {ITEM.LASTVALUE1}"
+              name: 'AdGuard Home Abnormally High Processing Time'
+              opdata: 'Processing Time: {ITEM.LASTVALUE1}'
               priority: AVERAGE
-              description: "Indicates that the previous hour average processing time is more than double the last 30d baseline"
+              description: 'Indicates that the previous hour average processing time is more than double the last 30d baseline'
               tags:
                 - tag: Processing
                   value: high
         - uuid: 07442b2b884640b3820c3580f1de5f21
-          name: "AdGuard Home Total DNS Queries by Period"
+          name: 'AdGuard Home Total DNS Queries by Period'
           type: DEPENDENT
           key: adguard.stats.queries.period
           history: 30d
-          description: "Total number of DNS queries for the configured period, {$ADGUARD.STAT.DAYS}"
+          description: 'Total number of DNS queries for the configured period, {$ADGUARD.STAT.DAYS}'
           preprocessing:
             - type: JSONPATH
               parameters:
@@ -558,17 +566,17 @@ zabbix_export:
             - tag: Statistics
               value: queries
         - uuid: aa85a79069a144aa94211c32ac99e50c
-          name: "AdGuard Home DNS Queries per Second"
+          name: 'AdGuard Home DNS Queries per Second'
           type: DEPENDENT
           key: adguard.stats.queries.second
           history: 30d
           value_type: FLOAT
           units: Qps
-          description: "Number of DNS queries per second (Qps) for the update interval"
+          description: 'Number of DNS queries per second (Qps) for the update interval'
           preprocessing:
             - type: JSONPATH
               parameters:
-                - "$.dns_queries[-1]"
+                - '$.dns_queries[-1]'
             - type: CHANGE_PER_SECOND
           master_item:
             key: adguard.stats
@@ -578,28 +586,28 @@ zabbix_export:
           triggers:
             - uuid: ad57492e69cf4fce8cddd3c61664b920
               expression: 'baselinewma(/AdGuard Home Stats by HTTP/adguard.stats.queries.second,1h:now/h,"d",30)=0'
-              name: "AdGuard Home Has NO DNS Queries"
-              opdata: "Qps: {ITEM.VALUE}"
+              name: 'AdGuard Home Has NO DNS Queries'
+              opdata: 'Qps: {ITEM.VALUE}'
               priority: WARNING
               description: |
                 Indicates that there are no DNS queries
                 Queries per second is 0
               dependencies:
-                - name: "AdGuard Home Stopped"
-                  expression: "avg(/AdGuard Home Stats by HTTP/adguard.status.run,#2)=0"
+                - name: 'AdGuard Home Stopped'
+                  expression: 'avg(/AdGuard Home Stats by HTTP/adguard.status.run,#2)=0'
               tags:
                 - tag: Queries
                   value: absent
         - uuid: 3a64b0c688ef4192af12626a67ec5b33
-          name: "AdGuard Home Total DNS Queries Today"
+          name: 'AdGuard Home Total DNS Queries Today'
           type: DEPENDENT
           key: adguard.stats.queries.today
           history: 30d
-          description: "Total number of DNS queries for the configured period, {$ADGUARD.STAT.DAYS}"
+          description: 'Total number of DNS queries for the configured period, {$ADGUARD.STAT.DAYS}'
           preprocessing:
             - type: JSONPATH
               parameters:
-                - "$.dns_queries[-1]"
+                - '$.dns_queries[-1]'
           master_item:
             key: adguard.stats
           tags:
@@ -613,50 +621,50 @@ zabbix_export:
                 trendavg(/AdGuard Home Stats by HTTP/adguard.stats.queries.today,1h:now/h)
                 >
                 (baselinewma(/AdGuard Home Stats by HTTP/adguard.stats.queries.today,1h:now/h,"d",30) * 2)
-              name: "AdGuard Home Abnormally High Daily Queries"
-              opdata: "Previous Hour Avg: {ITEM.LASTVALUE1}"
+              name: 'AdGuard Home Abnormally High Daily Queries'
+              opdata: 'Previous Hour Avg: {ITEM.LASTVALUE1}'
               priority: AVERAGE
-              description: "Indicates that the previous hour average for daily queries is more than twice the last 30d baseline"
+              description: 'Indicates that the previous hour average for daily queries is more than twice the last 30d baseline'
               tags:
                 - tag: Queries
                   value: high
         - uuid: 876537ed50424d239c8b4e1e51c3235a
-          name: "AdGuard Home General Status"
+          name: 'AdGuard Home General Status'
           type: HTTP_AGENT
           key: adguard.status
           delay: 5m
-          history: "0"
+          history: '0'
           value_type: TEXT
-          description: "AdGuard Home raw server current status and general settings"
+          description: 'AdGuard Home raw server current status and general settings'
           timeout: 3s
-          url: "{$ADGUARD.WEB}://{HOST.CONN}:{$ADGUARD.PORT}/control/status"
+          url: '{$ADGUARD.WEB}://{HOST.CONN}:{$ADGUARD.PORT}/control/status'
           headers:
             - name: Authorization
-              value: "Basic {$ADGUARD.AUTH}"
+              value: 'Basic {$ADGUARD.AUTH}'
           tags:
             - tag: Status
-              value: raw
+              value: json
         - uuid: ac953378c4b34db398c5ceb6b87cd58e
-          name: "AdGuard Home Status Protection"
+          name: 'AdGuard Home Status Protection'
           type: DEPENDENT
           key: adguard.status.protection
           history: 2w
-          trends: "0"
-          description: "AdGuard Home server protection status. True of false."
+          trends: '0'
+          description: 'AdGuard Home server protection status. True of false.'
           valuemap:
-            name: "AdGuard Status Protection"
+            name: 'AdGuard Status Protection'
           preprocessing:
             - type: JSONPATH
               parameters:
                 - $.protection_enabled
             - type: STR_REPLACE
               parameters:
-                - "true"
-                - "1"
+                - 'true'
+                - '1'
             - type: STR_REPLACE
               parameters:
-                - "false"
-                - "0"
+                - 'false'
+                - '0'
           master_item:
             key: adguard.status
           tags:
@@ -664,35 +672,35 @@ zabbix_export:
               value: proctection
           triggers:
             - uuid: 146080d4e0f24c82a9d859e7131103eb
-              expression: "last(/AdGuard Home Stats by HTTP/adguard.status.protection,#1)=0"
-              name: "AdGuard Home Protection Stopped"
-              opdata: "Status: {ITEM.LASTVALUE}"
+              expression: 'last(/AdGuard Home Stats by HTTP/adguard.status.protection,#1)=0'
+              name: 'AdGuard Home Protection Stopped'
+              opdata: 'Status: {ITEM.LASTVALUE}'
               priority: HIGH
-              description: "Indicates that AdGuard protection is false, it is unprotected"
+              description: 'Indicates that AdGuard protection is false, it is unprotected'
               tags:
                 - tag: Protection
                   value: stopped
         - uuid: d79dee0a7e31406c9e1fe0694cd6f70a
-          name: "AdGuard Home Status Running"
+          name: 'AdGuard Home Status Running'
           type: DEPENDENT
           key: adguard.status.run
           history: 2w
-          trends: "0"
-          description: "AdGuard Home server running status. True of false."
+          trends: '0'
+          description: 'AdGuard Home server running status. True of false.'
           valuemap:
-            name: "AdGuard Status Running"
+            name: 'AdGuard Status Running'
           preprocessing:
             - type: JSONPATH
               parameters:
                 - $.running
             - type: STR_REPLACE
               parameters:
-                - "true"
-                - "1"
+                - 'true'
+                - '1'
             - type: STR_REPLACE
               parameters:
-                - "false"
-                - "0"
+                - 'false'
+                - '0'
           master_item:
             key: adguard.status
           tags:
@@ -700,21 +708,21 @@ zabbix_export:
               value: run
           triggers:
             - uuid: 01eb3072ca3c4f61a4c4398de3dc09f0
-              expression: "avg(/AdGuard Home Stats by HTTP/adguard.status.run,#2)=0"
-              name: "AdGuard Home Stopped"
-              opdata: "Status: {ITEM.LASTVALUE}"
+              expression: 'avg(/AdGuard Home Stats by HTTP/adguard.status.run,#2)=0'
+              name: 'AdGuard Home Stopped'
+              opdata: 'Status: {ITEM.LASTVALUE}'
               priority: HIGH
-              description: "Indicates that AdGuard is not running."
+              description: 'Indicates that AdGuard is not running.'
               tags:
                 - tag: Run
                   value: stopped
         - uuid: d38b2e3766074393ad38fb4ca851c6e9
-          name: "AdGuard Home Version"
+          name: 'AdGuard Home Version'
           type: DEPENDENT
           key: adguard.status.version
           history: 1w
           value_type: CHAR
-          description: "Information about the current version of AdGuard Home."
+          description: 'Information about the current version of AdGuard Home.'
           inventory_link: SOFTWARE_APP_B
           preprocessing:
             - type: JSONPATH
@@ -730,61 +738,106 @@ zabbix_export:
               value: version
           triggers:
             - uuid: 77696661459d45859442ef65456567cb
-              expression: "change(/AdGuard Home Stats by HTTP/adguard.status.version)=1"
-              name: "AdGuard Home Version Changed"
-              opdata: "Version: {ITEM.VALUE}"
+              expression: 'change(/AdGuard Home Stats by HTTP/adguard.status.version)=1'
+              name: 'AdGuard Home Version Changed'
+              event_name: 'AdGuard Home Version Changed to {ITEM.LASTVALUE}'
+              opdata: 'Version: {ITEM.LASTVALUE}'
               priority: INFO
-              description: "Indicates that AdGuard version has changed"
+              description: 'Indicates that AdGuard version has changed'
+              manual_close: 'YES'
               tags:
                 - tag: Version
                   value: changed
+        - uuid: 53786d6e68784aa5bf3dc90d722276c4
+          name: 'AdGuard Home Version Check'
+          type: HTTP_AGENT
+          key: adguard.version.check
+          delay: 1d
+          history: 1d
+          value_type: TEXT
+          description: |
+            Information about the latest available version of AdGuard Home
+            It actually executes an update check
+            
+            This is only available if AdGuard Home was started whitout the --no-check-update option
+          url: '{$ADGUARD.WEB}://{HOST.CONN}:{$ADGUARD.PORT}/control/version.json'
+          headers:
+            - name: Authorization
+              value: 'Basic {$ADGUARD.AUTH}'
+          request_method: POST
+          tags:
+            - tag: Version
+              value: json
+          triggers:
+            - uuid: 876ef6f46ed0494e89786f30dcb598d0
+              expression: |
+                jsonpath(last(/AdGuard Home Stats by HTTP/adguard.version.check),"$.new_version","N/A")<>0
+                and
+                jsonpath(last(/AdGuard Home Stats by HTTP/adguard.version.check),"$.can_autoupdate","N/A")="true"
+              name: 'AdGuard Home Update Available'
+              event_name: 'AdGuard Home Update Available - New Version {?jsonpath(last(/adguardtest/adguard.version),"$.new_version","N/A")}'
+              opdata: 'New version: {{ITEM.VALUE}.iregsub("\"new_version\":\"(.*)\"\,\"announcement\"","\1")}'
+              priority: INFO
+              description: |
+                There is a new version of AdGuard Home available
+                
+                You can upgrade your AdGuard Home from the command-line running the command below
+                
+                /opt/AdGuardHome/AdGuardHome --update
+              manual_close: 'YES'
+              dependencies:
+                - name: 'AdGuard Home Version Changed'
+                  expression: 'change(/AdGuard Home Stats by HTTP/adguard.status.version)=1'
+              tags:
+                - tag: Version
+                  value: new
       tags:
         - tag: Adguard
           value: Stats
       macros:
-        - macro: "{$ADGUARD.AUTH}"
+        - macro: '{$ADGUARD.AUTH}'
           description: 'HTTP header Basic authorization string. A Base64 encoded string of your username:password. Use "echo -n ''<user>:<pass>'' | base64" to retrieve the authorization string'
-        - macro: "{$ADGUARD.PORT}"
-          value: "3000"
-          description: "AdGuard Home HTTP port"
-        - macro: "{$ADGUARD.STAT.DAYS}"
-          value: "30"
-          description: "The configured statistics period in days"
-        - macro: "{$ADGUARD.WEB}"
+        - macro: '{$ADGUARD.PORT}'
+          value: '3000'
+          description: 'AdGuard Home HTTP port'
+        - macro: '{$ADGUARD.STAT.DAYS}'
+          value: '30'
+          description: 'The configured statistics period in days'
+        - macro: '{$ADGUARD.WEB}'
           value: http
           description: 'Web protocol. Either "http" or "https"'
       valuemaps:
         - uuid: 56fd68a1983948a2970bb39d884cc49b
-          name: "AdGuard Status Filter"
+          name: 'AdGuard Status Filter'
           mappings:
-            - value: "1"
+            - value: '1'
               newvalue: Enabled
-            - value: "0"
+            - value: '0'
               newvalue: Disabled
         - uuid: 51b0ddec95cc4180baebe38eecc7f606
-          name: "AdGuard Status Protection"
+          name: 'AdGuard Status Protection'
           mappings:
-            - value: "1"
+            - value: '1'
               newvalue: Protected
-            - value: "0"
+            - value: '0'
               newvalue: Unprotected
         - uuid: d677d8e8d071461a8f477f8ba46aa9d5
-          name: "AdGuard Status Running"
+          name: 'AdGuard Status Running'
           mappings:
-            - value: "1"
+            - value: '1'
               newvalue: Running
-            - value: "0"
+            - value: '0'
               newvalue: Stopped
     - uuid: 6e3e12e268bb434d8d708434e0663da9
-      template: "AdGuard Home Stats by Zabbix Agent Active"
-      name: "AdGuard Home Stats by Zabbix Agent Active"
+      template: 'AdGuard Home Stats by Zabbix Agent Active'
+      name: 'AdGuard Home Stats by Zabbix Agent Active'
       description: |
         AdGuard Home template for general statistics.
         Uses the Zabbix Agent in active mode to monitor AdGuard Home, mainly for installations behind a blocking system.
-
+        
         GitHub: https://github.com/AdguardTeam/AdGuardHome
         API documentation: https://github.com/AdguardTeam/AdGuardHome/tree/master/openapi
-
+        
         Access the documentation with https://editor.swagger.io by importing the openapi.yaml file.
       vendor:
         name: diasdm
@@ -793,11 +846,11 @@ zabbix_export:
         - name: Templates/Applications
       items:
         - uuid: a3fba1ee5fd64740944b1d94dc4ad154
-          name: "AdGuard Home Total DNS Blocks by Period"
+          name: 'AdGuard Home Total DNS Blocks by Period'
           type: DEPENDENT
           key: adguard.stats.blocked.period
           history: 30d
-          description: "The number of DNS requests blocked by filtering rules for the configure period, {$ADGUARD.STAT.DAYS}"
+          description: 'The number of DNS requests blocked by filtering rules for the configure period, {$ADGUARD.STAT.DAYS}'
           preprocessing:
             - type: JSONPATH
               parameters:
@@ -810,37 +863,37 @@ zabbix_export:
             - tag: Statistics
               value: blocks
         - uuid: 6e047bf4defc4ebfa1dabb984b66021e
-          name: "AdGuard Home DNS Queries Period Block Rate"
+          name: 'AdGuard Home DNS Queries Period Block Rate'
           type: CALCULATED
           key: adguard.stats.blocked.period.rate
           delay: 5m
           history: 7d
           value_type: FLOAT
-          units: "%"
+          units: '%'
           params: |
             last(//adguard.stats.blocked.period,#1)
             /
             last(//adguard.stats.queries.period,#1)
-          description: "Query block rate by period"
+          description: 'Query block rate by period'
           preprocessing:
             - type: MULTIPLIER
               parameters:
-                - "100"
+                - '100'
           tags:
             - tag: Queries
               value: period
             - tag: Statistics
               value: queries
         - uuid: 6d4423a953f646c28c8be0bd6c9388c1
-          name: "AdGuard Home Total DNS Blocks Today"
+          name: 'AdGuard Home Total DNS Blocks Today'
           type: DEPENDENT
           key: adguard.stats.blocked.today
           history: 30d
-          description: "The number of DNS requests blocked by filtering rules"
+          description: 'The number of DNS requests blocked by filtering rules'
           preprocessing:
             - type: JSONPATH
               parameters:
-                - "$.blocked_filtering[-1]"
+                - '$.blocked_filtering[-1]'
           master_item:
             key: 'system.run["curl -s -S -H ''Authorization:Basic {$ADGUARD.AUTH}'' {$ADGUARD.WEB}://{HOST.CONN}:{$ADGUARD.PORT}/control/stats"]'
           tags:
@@ -849,35 +902,35 @@ zabbix_export:
             - tag: Statistics
               value: blocks
         - uuid: 01fb228f3a524174a5a62ca2f3dedf95
-          name: "AdGuard Home DNS Queries Today Block Rate"
+          name: 'AdGuard Home DNS Queries Today Block Rate'
           type: CALCULATED
           key: adguard.stats.blocked.today.rate
           delay: 5m
           history: 7d
           value_type: FLOAT
-          units: "%"
+          units: '%'
           params: |
             last(//adguard.stats.blocked.today,#1)
             /
             last(//adguard.stats.queries.today,#1)
-          description: "Daily query block rate"
+          description: 'Daily query block rate'
           preprocessing:
             - type: MULTIPLIER
               parameters:
-                - "100"
+                - '100'
           tags:
             - tag: Queries
               value: today
             - tag: Statistics
               value: queries
         - uuid: 74a205ee6ac3425faa49172ef7c9c459
-          name: "AdGuard Home Average Processing Time"
+          name: 'AdGuard Home Average Processing Time'
           type: DEPENDENT
           key: adguard.stats.processing.time
           history: 30d
           value_type: FLOAT
           units: s
-          description: "Average time in seconds on processing a DNS request"
+          description: 'Average time in seconds on processing a DNS request'
           preprocessing:
             - type: JSONPATH
               parameters:
@@ -893,19 +946,19 @@ zabbix_export:
                 trendavg(/AdGuard Home Stats by Zabbix Agent Active/adguard.stats.processing.time,1h:now/h)
                 >
                 (baselinewma(/AdGuard Home Stats by Zabbix Agent Active/adguard.stats.processing.time,1h:now/h,"d",30) * 2)
-              name: "AdGuard Home Abnormally High Processing Time"
-              opdata: "Processing Time: {ITEM.LASTVALUE1}"
+              name: 'AdGuard Home Abnormally High Processing Time'
+              opdata: 'Processing Time: {ITEM.LASTVALUE1}'
               priority: AVERAGE
-              description: "Indicates that the previous hour average processing time is more than double the last 30d baseline"
+              description: 'Indicates that the previous hour average processing time is more than double the last 30d baseline'
               tags:
                 - tag: Processing
                   value: high
         - uuid: 6f462eb14eb4445c9b6b4126be693a38
-          name: "AdGuard Home Total DNS Queries by Period"
+          name: 'AdGuard Home Total DNS Queries by Period'
           type: DEPENDENT
           key: adguard.stats.queries.period
           history: 30d
-          description: "Total number of DNS queries for the configured period, {$ADGUARD.STAT.DAYS}"
+          description: 'Total number of DNS queries for the configured period, {$ADGUARD.STAT.DAYS}'
           preprocessing:
             - type: JSONPATH
               parameters:
@@ -918,17 +971,17 @@ zabbix_export:
             - tag: Statistics
               value: queries
         - uuid: 1bd5e7c4508e4188baaa238364afc032
-          name: "AdGuard Home DNS Queries per Second"
+          name: 'AdGuard Home DNS Queries per Second'
           type: DEPENDENT
           key: adguard.stats.queries.second
           history: 30d
           value_type: FLOAT
           units: Qps
-          description: "Number of DNS queries per second (Qps) for the update interval"
+          description: 'Number of DNS queries per second (Qps) for the update interval'
           preprocessing:
             - type: JSONPATH
               parameters:
-                - "$.dns_queries[-1]"
+                - '$.dns_queries[-1]'
             - type: CHANGE_PER_SECOND
           master_item:
             key: 'system.run["curl -s -S -H ''Authorization:Basic {$ADGUARD.AUTH}'' {$ADGUARD.WEB}://{HOST.CONN}:{$ADGUARD.PORT}/control/stats"]'
@@ -938,28 +991,28 @@ zabbix_export:
           triggers:
             - uuid: ca6ac4eaea534a8eac0041027c8dcca4
               expression: 'baselinewma(/AdGuard Home Stats by Zabbix Agent Active/adguard.stats.queries.second,1h:now/h,"d",30)=0'
-              name: "AdGuard Home Has NO DNS Queries"
-              opdata: "Qps: {ITEM.LASTVALUE}"
+              name: 'AdGuard Home Has NO DNS Queries'
+              opdata: 'Qps: {ITEM.LASTVALUE}'
               priority: WARNING
               description: |
                 Indicates that there are no DNS queries
                 Queries per second is 0
               dependencies:
-                - name: "AdGuard Home Stopped"
-                  expression: "avg(/AdGuard Home Stats by Zabbix Agent Active/adguard.status.run,#2)=0"
+                - name: 'AdGuard Home Stopped'
+                  expression: 'avg(/AdGuard Home Stats by Zabbix Agent Active/adguard.status.run,#2)=0'
               tags:
                 - tag: Queries
                   value: absent
         - uuid: 37a7d37e80904d74bb6e8fc57195d8f1
-          name: "AdGuard Home Total DNS Queries Today"
+          name: 'AdGuard Home Total DNS Queries Today'
           type: DEPENDENT
           key: adguard.stats.queries.today
           history: 30d
-          description: "Total number of DNS queries for the configured period, {$ADGUARD.STAT.DAYS}"
+          description: 'Total number of DNS queries for the configured period, {$ADGUARD.STAT.DAYS}'
           preprocessing:
             - type: JSONPATH
               parameters:
-                - "$.dns_queries[-1]"
+                - '$.dns_queries[-1]'
           master_item:
             key: 'system.run["curl -s -S -H ''Authorization:Basic {$ADGUARD.AUTH}'' {$ADGUARD.WEB}://{HOST.CONN}:{$ADGUARD.PORT}/control/stats"]'
           tags:
@@ -973,34 +1026,34 @@ zabbix_export:
                 trendavg(/AdGuard Home Stats by Zabbix Agent Active/adguard.stats.queries.today,1h:now/h)
                 >
                 (baselinewma(/AdGuard Home Stats by Zabbix Agent Active/adguard.stats.queries.today,1h:now/h,"d",30) * 2)
-              name: "AdGuard Home Abnormally High Daily Queries"
-              opdata: "Previous Hour Avg: {ITEM.LASTVALUE1}"
+              name: 'AdGuard Home Abnormally High Daily Queries'
+              opdata: 'Previous Hour Avg: {ITEM.LASTVALUE1}'
               priority: AVERAGE
-              description: "Indicates that the previous hour average for daily queries is more than twice the last 30d baseline"
+              description: 'Indicates that the previous hour average for daily queries is more than twice the last 30d baseline'
               tags:
                 - tag: Queries
                   value: high
         - uuid: 19253152efd545c0b268c6a94c1685b7
-          name: "AdGuard Home Status Protection"
+          name: 'AdGuard Home Status Protection'
           type: DEPENDENT
           key: adguard.status.protection
           history: 2w
-          trends: "0"
-          description: "AdGuard Home server protection status. True of false."
+          trends: '0'
+          description: 'AdGuard Home server protection status. True of false.'
           valuemap:
-            name: "AdGuard Status Protection"
+            name: 'AdGuard Status Protection'
           preprocessing:
             - type: JSONPATH
               parameters:
                 - $.protection_enabled
             - type: STR_REPLACE
               parameters:
-                - "true"
-                - "1"
+                - 'true'
+                - '1'
             - type: STR_REPLACE
               parameters:
-                - "false"
-                - "0"
+                - 'false'
+                - '0'
           master_item:
             key: 'system.run["curl -s -S -H ''Authorization:Basic {$ADGUARD.AUTH}'' {$ADGUARD.WEB}://{HOST.CONN}:{$ADGUARD.PORT}/control/status"]'
           tags:
@@ -1008,35 +1061,35 @@ zabbix_export:
               value: protection
           triggers:
             - uuid: c35b4008311f40c09f07cbd16c90656c
-              expression: "last(/AdGuard Home Stats by Zabbix Agent Active/adguard.status.protection,#1)=0"
-              name: "AdGuard Home Protection Stopped"
-              opdata: "Status: {ITEM.LASTVALUE}"
+              expression: 'last(/AdGuard Home Stats by Zabbix Agent Active/adguard.status.protection,#1)=0'
+              name: 'AdGuard Home Protection Stopped'
+              opdata: 'Status: {ITEM.LASTVALUE}'
               priority: HIGH
-              description: "Indicates that AdGuard protection is false, it is unprotected"
+              description: 'Indicates that AdGuard protection is false, it is unprotected'
               tags:
                 - tag: Protection
                   value: stopped
         - uuid: 5bf45f970c484f63a194b56669177a56
-          name: "AdGuard Home Status Running"
+          name: 'AdGuard Home Status Running'
           type: DEPENDENT
           key: adguard.status.run
           history: 2w
-          trends: "0"
-          description: "AdGuard Home server running status. True of false."
+          trends: '0'
+          description: 'AdGuard Home server running status. True of false.'
           valuemap:
-            name: "AdGuard Status Running"
+            name: 'AdGuard Status Running'
           preprocessing:
             - type: JSONPATH
               parameters:
                 - $.running
             - type: STR_REPLACE
               parameters:
-                - "true"
-                - "1"
+                - 'true'
+                - '1'
             - type: STR_REPLACE
               parameters:
-                - "false"
-                - "0"
+                - 'false'
+                - '0'
           master_item:
             key: 'system.run["curl -s -S -H ''Authorization:Basic {$ADGUARD.AUTH}'' {$ADGUARD.WEB}://{HOST.CONN}:{$ADGUARD.PORT}/control/status"]'
           tags:
@@ -1044,21 +1097,21 @@ zabbix_export:
               value: run
           triggers:
             - uuid: 430c76d8ffc24e07852ab717af0f8708
-              expression: "avg(/AdGuard Home Stats by Zabbix Agent Active/adguard.status.run,#2)=0"
-              name: "AdGuard Home Stopped"
-              opdata: "Status: {ITEM.LASTVALUE}"
+              expression: 'avg(/AdGuard Home Stats by Zabbix Agent Active/adguard.status.run,#2)=0'
+              name: 'AdGuard Home Stopped'
+              opdata: 'Status: {ITEM.LASTVALUE}'
               priority: HIGH
-              description: "Indicates that AdGuard is not running."
+              description: 'Indicates that AdGuard is not running.'
               tags:
                 - tag: Run
                   value: stopped
         - uuid: 8dd5a62bc4f54a53bd1310825481fd77
-          name: "AdGuard Home Version"
+          name: 'AdGuard Home Version'
           type: DEPENDENT
           key: adguard.status.version
           history: 1w
           value_type: CHAR
-          description: "Information about the current version of AdGuard Home."
+          description: 'Information about the current version of AdGuard Home.'
           inventory_link: SOFTWARE_APP_B
           preprocessing:
             - type: JSONPATH
@@ -1074,70 +1127,108 @@ zabbix_export:
               value: version
           triggers:
             - uuid: 5ff9b2c4e64543418753fefd090a825e
-              expression: "change(/AdGuard Home Stats by Zabbix Agent Active/adguard.status.version)=1"
-              name: "AdGuard Home Version Changed"
-              opdata: "Version: {ITEM.VALUE}"
+              expression: 'change(/AdGuard Home Stats by Zabbix Agent Active/adguard.status.version)=1'
+              name: 'AdGuard Home Version Changed'
+              opdata: 'Version: {ITEM.VALUE}'
               priority: INFO
-              description: "Indicates that AdGuard version has changed"
+              description: 'Indicates that AdGuard version has changed'
               tags:
                 - tag: Version
                   value: changed
         - uuid: e8d3ec549c51426e9df6ae7c70f189dd
-          name: "AdGuard Home Statistics"
+          name: 'AdGuard Home Statistics'
           type: ZABBIX_ACTIVE
           key: 'system.run["curl -s -S -H ''Authorization:Basic {$ADGUARD.AUTH}'' {$ADGUARD.WEB}://{HOST.CONN}:{$ADGUARD.PORT}/control/stats"]'
           delay: 5m
-          history: "0"
+          history: '0'
           value_type: TEXT
-          description: "Raw DNS server statistics"
+          description: 'Raw DNS server statistics'
           tags:
             - tag: Statistics
-              value: raw
+              value: json
         - uuid: 492fa0bfcbdd4231af5b7853b79d6d3c
-          name: "AdGuard Home General Status"
+          name: 'AdGuard Home General Status'
           type: ZABBIX_ACTIVE
           key: 'system.run["curl -s -S -H ''Authorization:Basic {$ADGUARD.AUTH}'' {$ADGUARD.WEB}://{HOST.CONN}:{$ADGUARD.PORT}/control/status"]'
           delay: 5m
-          history: "0"
+          history: '0'
           value_type: TEXT
-          description: "AdGuard Home raw server current status and general settings"
+          description: 'AdGuard Home raw server current status and general settings'
           tags:
             - tag: Status
-              value: raw
+              value: json
+        - uuid: 7f77eb98f0884b59aaab12625d6559c0
+          name: 'AdGuard Home Version Check'
+          type: ZABBIX_ACTIVE
+          key: 'system.run["curl -s -S -H ''Authorization:Basic {$ADGUARD.AUTH}'' {$ADGUARD.WEB}://{HOST.CONN}:{$ADGUARD.PORT}/control/version.json"]'
+          delay: 1d
+          history: 1d
+          value_type: TEXT
+          description: |
+            Information about the latest available version of AdGuard Home
+            It actually executes an update check
+            
+            This is only available if AdGuard Home was started whitout the --no-check-update option
+          tags:
+            - tag: Version
+              value: json
+          triggers:
+            - uuid: 267c09caa8b0477a98a64cc42c1c7920
+              expression: |
+                jsonpath(last(/AdGuard Home Stats by Zabbix Agent Active/system.run["curl -s -S -H 'Authorization:Basic {$ADGUARD.AUTH}' {$ADGUARD.WEB}://{HOST.CONN}:{$ADGUARD.PORT}/control/version.json"]),"$.new_version","N/A")<>0
+                and
+                jsonpath(last(/AdGuard Home Stats by Zabbix Agent Active/system.run["curl -s -S -H 'Authorization:Basic {$ADGUARD.AUTH}' {$ADGUARD.WEB}://{HOST.CONN}:{$ADGUARD.PORT}/control/version.json"]),"$.can_autoupdate","N/A")="true"
+              name: 'AdGuard Home Update Available'
+              event_name: 'AdGuard Home Update Available - New Version {?jsonpath(last(/adguardtest/adguard.version),"$.new_version","N/A")}'
+              opdata: 'New version: {{ITEM.VALUE}.iregsub("\"new_version\":\"(.*)\"\,\"announcement\"","\1")}'
+              priority: INFO
+              description: |
+                There is a new version of AdGuard Home available
+                
+                You can upgrade your AdGuard Home from the command-line running the command below
+                
+                /opt/AdGuardHome/AdGuardHome --update
+              manual_close: 'YES'
+              dependencies:
+                - name: 'AdGuard Home Version Changed'
+                  expression: 'change(/AdGuard Home Stats by Zabbix Agent Active/adguard.status.version)=1'
+              tags:
+                - tag: Version
+                  value: new
       tags:
         - tag: Adguard
           value: Stats
       macros:
-        - macro: "{$ADGUARD.AUTH}"
+        - macro: '{$ADGUARD.AUTH}'
           description: 'HTTP header Basic authorization string. A Base64 encoded string of your username:password. Use "echo -n ''<user>:<pass>'' | base64" to retrieve the authorization string'
-        - macro: "{$ADGUARD.PORT}"
-          value: "3000"
-          description: "AdGuard Home HTTP port"
-        - macro: "{$ADGUARD.STAT.DAYS}"
-          value: "30"
-          description: "The configured statistics period in days"
-        - macro: "{$ADGUARD.WEB}"
+        - macro: '{$ADGUARD.PORT}'
+          value: '3000'
+          description: 'AdGuard Home HTTP port'
+        - macro: '{$ADGUARD.STAT.DAYS}'
+          value: '30'
+          description: 'The configured statistics period in days'
+        - macro: '{$ADGUARD.WEB}'
           value: http
           description: 'Web protocol. Either "http" or "https"'
       valuemaps:
         - uuid: ea4cc66e83a14ee78549852cdf03b0c5
-          name: "AdGuard Status Filter"
+          name: 'AdGuard Status Filter'
           mappings:
-            - value: "1"
+            - value: '1'
               newvalue: Enabled
-            - value: "0"
+            - value: '0'
               newvalue: Disabled
         - uuid: 2fa6bad0b845408eb7e7a4e7a1008b97
-          name: "AdGuard Status Protection"
+          name: 'AdGuard Status Protection'
           mappings:
-            - value: "1"
+            - value: '1'
               newvalue: Protected
-            - value: "0"
+            - value: '0'
               newvalue: Unprotected
         - uuid: 0c0aad3471784a5583c6936c66b2423c
-          name: "AdGuard Status Running"
+          name: 'AdGuard Status Running'
           mappings:
-            - value: "1"
+            - value: '1'
               newvalue: Running
-            - value: "0"
+            - value: '0'
               newvalue: Stopped

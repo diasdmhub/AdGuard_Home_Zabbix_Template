@@ -33,7 +33,6 @@ The main focus is on monitoring statistics from AdGuard Home.
 
 <BR>
 
-
 ### TEMPLATES
 
 For more flexibility, the release includes templates that cover **two monitoring methods**, one for native HTTP data retrieval and another for Zabbix Agent Active. Both methods provide the same monitoring items, but with different item types. **They are not intended to be used together on the same host**.
@@ -48,7 +47,6 @@ In total, the released `yaml` file contains **four** templates.
 
 <BR>
 
-
 ### REQUIREMENTS
 
 - AdGuard Home
@@ -59,13 +57,11 @@ In total, the released `yaml` file contains **four** templates.
 
 <BR>
 
-
 ### TESTED VERSION
 
 This template has been tested with AdGuard Home version `> 0.107` on an Asus RT-AX86U router running an [Asus Merlin](https://www.asuswrt-merlin.net) firmware, a Mikrotik RouterOS and a standard Linux distribution running Oracle Linux 9. It should work with any recent version of AdGuard Home.
 
 <BR>
-
 
 ### SETUP
 
@@ -78,6 +74,7 @@ This template has been tested with AdGuard Home version `> 0.107` on an Asus RT-
 <BR>
 
 ---
+
 1️⃣ After importing the template to Zabbix and creating AdGuard's host (_see [requirements](#requirements)_), encode **your** AdGuard Authorization string `username:password` to Base64. See the examples bellow.
   - Shell
 > ```shell
@@ -105,7 +102,6 @@ This template has been tested with AdGuard Home version `> 0.107` on an Asus RT-
 
 <BR><BR>
 
-
 ### MACROS USED
 
 | Macro                | Default Value | Description                                                                                    |
@@ -117,7 +113,6 @@ This template has been tested with AdGuard Home version `> 0.107` on an Asus RT-
 | {$ADGUARD.FILTER_ENABLED} | true     | True to discover only enabled filters, leave empty to discover all filters (*AdGuard Home Filters only*) |
 
 <BR>
-
 
 ### ITEMS (*AdGuard Home Stats*)
 
@@ -136,23 +131,19 @@ This template has been tested with AdGuard Home version `> 0.107` on an Asus RT-
 | AdGuard Home Statistics: AdGuard Home Total DNS Queries Today     |
 | AdGuard Home DNS Queries Today Block Rate                         |
 | AdGuard Home DNS Queries Today Period Rate                        |
+| AdGuard Home Version Check                                        |
 
 <BR>
-
 
 ### TRIGGERS (*AdGuard Home Stats*)
 
-| Name                                         |
-| -------------------------------------------- |
-| AdGuard Home Abnormally High Daily Queries   |
-| AdGuard Home Abnormally High Processing Time |
-| AdGuard Home Has NO DNS Queries              |
-| AdGuard Home Protection Stopped              |
-| AdGuard Home Stopped                         |
-| AdGuard Home Version Changed                 |
+| Name | | -------------------------------------------- | | AdGuard Home
+Abnormally High Daily Queries | | AdGuard Home Abnormally High Processing Time |
+| AdGuard Home Has NO DNS Queries | | AdGuard Home Protection Stopped | |
+AdGuard Home Stopped | | AdGuard Home Update Available | | AdGuard Home Version
+Changed |
 
 <BR>
-
 
 ### ITEMS (*AdGuard Home Filters*)
 
@@ -163,7 +154,6 @@ This template has been tested with AdGuard Home version `> 0.107` on an Asus RT-
 
 <BR>
 
-
 ### DISCOVERY RULE (*AdGuard Home Filters*)
 
 | Name                                            |
@@ -171,7 +161,6 @@ This template has been tested with AdGuard Home version `> 0.107` on an Asus RT-
 | AdGuard Home Filters: AdGuard Filters Discovery |
 
 <BR>
-
 
 ### ITEM PROTOTYPES (*AdGuard Home Filters*)
 
@@ -183,7 +172,6 @@ This template has been tested with AdGuard Home version `> 0.107` on an Asus RT-
 
 <BR>
 
-
 ### TRIGGER PROTOTYPES (*AdGuard Home Filters*)
 
 | Name                                                                  |
@@ -192,7 +180,6 @@ This template has been tested with AdGuard Home version `> 0.107` on an Asus RT-
 | AdGuard Home Filter not Updated in more than 7 days - {\#FILTER.NAME} |
 
 <BR>
-
 
 ### DASHBOARD EXAMPLE
 ![Dashboard example](images/dash_example1.png)

@@ -771,11 +771,11 @@ zabbix_export:
           triggers:
             - uuid: 876ef6f46ed0494e89786f30dcb598d0
               expression: |
-                jsonpath(last(/AdGuard Home Stats by HTTP/adguard.version.check),"$.new_version","N/A")<>0
+                jsonpath(last(/AdGuard Home Stats by HTTP/adguard.version.check),"$.new_version","0")<>0
                 and
                 jsonpath(last(/AdGuard Home Stats by HTTP/adguard.version.check),"$.can_autoupdate","N/A")="true"
               name: 'AdGuard Home Update Available'
-              event_name: 'AdGuard Home Update Available - New Version {?jsonpath(last(/adguardtest/adguard.version),"$.new_version","N/A")}'
+              event_name: 'AdGuard Home Update Available - New Version {?jsonpath(last(/adguardtest/adguard.version.check),"$.new_version","N/A")}'
               opdata: 'New version: {{ITEM.VALUE}.iregsub("\"new_version\":\"(.*)\"\,\"announcement\"","\1")}'
               priority: INFO
               description: |

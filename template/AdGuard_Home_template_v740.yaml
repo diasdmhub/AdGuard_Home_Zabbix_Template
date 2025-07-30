@@ -784,7 +784,6 @@ zabbix_export:
                 You can upgrade your AdGuard Home from the command-line running the command below
                 
                 /opt/AdGuardHome/AdGuardHome --update
-              manual_close: 'YES'
               dependencies:
                 - name: 'AdGuard Home Version Changed'
                   expression: 'change(/AdGuard Home Stats by HTTP/adguard.status.version)=1'
@@ -1189,7 +1188,6 @@ zabbix_export:
                 You can upgrade your AdGuard Home from the command-line running the command below
                 
                 /opt/AdGuardHome/AdGuardHome --update
-              manual_close: 'YES'
               dependencies:
                 - name: 'AdGuard Home Version Changed'
                   expression: 'change(/AdGuard Home Stats by Zabbix Agent Active/adguard.status.version)=1'

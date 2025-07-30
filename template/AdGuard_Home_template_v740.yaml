@@ -1132,6 +1132,7 @@ zabbix_export:
               opdata: 'Version: {ITEM.VALUE}'
               priority: INFO
               description: 'Indicates that AdGuard version has changed'
+              manual_close: 'YES'
               tags:
                 - tag: Version
                   value: changed

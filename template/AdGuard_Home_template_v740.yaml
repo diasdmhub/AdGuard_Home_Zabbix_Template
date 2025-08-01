@@ -1179,7 +1179,7 @@ zabbix_export:
                 and
                 jsonpath(last(/AdGuard Home Stats by Zabbix Agent Active/system.run["curl -s -S -H 'Authorization:Basic {$ADGUARD.AUTH}' {$ADGUARD.WEB}://{HOST.CONN}:{$ADGUARD.PORT}/control/version.json"]),"$.can_autoupdate","N/A")="true"
               name: 'AdGuard Home Update Available'
-              event_name: 'AdGuard Home Update Available - New Version {?jsonpath(last(/adguardtest/adguard.version),"$.new_version","N/A")}'
+              event_name: 'AdGuard Home Update Available - New Version {?jsonpath(last(/adguardtest/adguard.version.check),"$.new_version","N/A")}'
               opdata: 'New version: {{ITEM.VALUE}.iregsub("\"new_version\":\"(.*)\"\,\"announcement\"","\1")}'
               priority: INFO
               description: |

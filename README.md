@@ -3,7 +3,7 @@
 <div align="right">
 
 [![License](https://img.shields.io/badge/License-GPL3-blue?logo=opensourceinitiative&logoColor=fff)](./LICENSE)
-[![Version](https://img.shields.io/badge/Version-7413-blue?logo=zotero&color=0aa8d2)](https://github.com/diasdmhub/AdGuard_Home_Zabbix_Template/releases/tag/latest)
+[![Version](https://img.shields.io/badge/Version-7415-blue?logo=zotero&color=0aa8d2)](https://github.com/diasdmhub/AdGuard_Home_Zabbix_Template/releases/tag/latest)
 
 </div>
 
@@ -118,6 +118,9 @@ This template has been tested with AdGuard Home version `> 0.107` on an Asus RT-
 
 | Name                                                              | Description                                                 |
 | ----------------------------------------------------------------- | ----------------------------------------------------------- |
+| AdGuard Home Clients                                              | Raw clients JSON data |
+| AdGuard Home Clients: AdGuard Home Clients ARP                    | Total number of auto registered clients from ARP |
+| AdGuard Home Clients: AdGuard Home Clients Registered             | Total number of manually registered clients |
 | AdGuard Home General Status                                       | AdGuard Home raw server current status and general settings |
 | AdGuard Home General Status: AdGuard Home Status Protection       | AdGuard Home server protection status |
 | AdGuard Home General Status: AdGuard Home Status Running          | AdGuard Home server running status |

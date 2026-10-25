@@ -3,7 +3,7 @@
 <div align="right">
 
 [![License](https://img.shields.io/badge/License-GPL3-blue?logo=opensourceinitiative&logoColor=fff)](./LICENSE)
-[![Version](https://img.shields.io/badge/Version-7415-blue?logo=zotero&color=0aa8d2)](https://github.com/diasdmhub/AdGuard_Home_Zabbix_Template/releases/tag/latest)
+[![Version](https://img.shields.io/badge/Version-7416-blue?logo=zotero&color=0aa8d2)](https://github.com/diasdmhub/AdGuard_Home_Zabbix_Template/releases/tag/latest)
 
 </div>
 
@@ -109,7 +109,6 @@ This template has been tested with AdGuard Home version `> 0.107` on an Asus RT-
 | {$ADGUARD.AUTH}           |               | HTTP header `Basic` authorization string. A Base64 encoded string of your `username:password`.           |
 | {$ADGUARD.PORT}           | 3000          | AdGuard Home HTTP port                                                                                   |
 | {$ADGUARD.WEB}            | http          | Web protocol. Either "http" or "https"                                                                   |
-| {$ADGUARD.STAT.DAYS}      | 30            | The configured statistics period in days (*AdGuard Home Stats only*)                                     |
 | {$ADGUARD.FILTER_ENABLED} | true          | True to discover only enabled filters, leave empty to discover all filters (*AdGuard Home Filters only*) |
 
 <BR>
@@ -128,12 +127,12 @@ This template has been tested with AdGuard Home version `> 0.107` on an Asus RT-
 | AdGuard Home Statistics                                           | Raw DNS server statistics |
 | AdGuard Home Statistics: AdGuard Home Average Processing Time     | Average time in seconds on processing a DNS request |
 | AdGuard Home Statistics: AdGuard Home DNS Queries per Second      | Number of DNS queries per second (Qps) for the update interval |
-| AdGuard Home Statistics: AdGuard Home Total DNS Blocks by Period  | The number of DNS requests blocked by filtering rules for the configured period |
-| AdGuard Home Statistics: AdGuard Home Total DNS Blocks Today      | The number of DNS requests blocked by filtering rules for the current day|
-| AdGuard Home Statistics: AdGuard Home Total DNS Queries by Period | Total number of DNS queries for the configured period |
-| AdGuard Home Statistics: AdGuard Home Total DNS Queries Today     | Total number of DNS queries for the current day |
-| AdGuard Home DNS Queries Today Block Rate                         | Daily query block rate |
-| AdGuard Home DNS Queries Today Period Rate                        | Query block rate by period |
+| AdGuard Home Statistics: AdGuard Home Total DNS Blocks by Period  | The number of DNS requests blocked by filtering rules for the configured statistics retention period. It is a sliding window: AdGuard Home discards the oldest hourly unit at every hour, so the value decreases a little at every hour |
+| AdGuard Home Statistics: AdGuard Home Total DNS Blocks Today      | **Deprecated**. Kept to preserve history. Use the *AdGuard Home Statistics Period Discovery* item prototypes instead |
+| AdGuard Home Statistics: AdGuard Home Total DNS Queries by Period | Total number of DNS queries for the configured statistics retention period. It is a sliding window: AdGuard Home discards the oldest hourly unit at every hour, so the value decreases a little at every hour |
+| AdGuard Home Statistics: AdGuard Home Total DNS Queries Today     | **Deprecated**. Kept to preserve history. Use the *AdGuard Home Statistics Period Discovery* item prototypes instead |
+| AdGuard Home DNS Queries Period Block Rate                        | Query block rate by period |
+| AdGuard Home DNS Queries Today Block Rate                         | **Deprecated**. Daily query block rate. Kept to preserve history |
 | AdGuard Home Version Check                                        | Information about the latest available version of AdGuard Home. It actually executes an update check. **Only available if AdGuard Home was started without the `--no-check-update` option** |
 
 <BR>
@@ -142,13 +141,41 @@ This template has been tested with AdGuard Home version `> 0.107` on an Asus RT-
 
 | Name                                         | Description                                                                                         |
 | -------------------------------------------- | --------------------------------------------------------------------------------------------------- |
-| AdGuard Home Abnormally High Daily Queries   | Indicates that the previous hour average for daily queries is more than twice the last 30d baseline |
+| AdGuard Home Abnormally High Daily Queries   | **Deprecated**. Indicates that the previous hour average for daily queries is more than twice the last 30d baseline |
 | AdGuard Home Abnormally High Processing Time | Indicates that the previous hour average processing time is more than double the last 30d baseline |
 | AdGuard Home Has NO DNS Queries              | Indicates that there are no DNS queries. Queries per second is 0 |
 | AdGuard Home Protection Stopped              | Indicates that AdGuard protection is false, it is unprotected |
 | AdGuard Home Stopped                         | Indicates that AdGuard is not running |
 | AdGuard Home Update Available                | There is a new version of AdGuard Home available |
 | AdGuard Home Version Changed                 | Indicates that AdGuard version has changed |
+
+<BR>
+
+### DISCOVERY RULE (*AdGuard Home Stats*)
+
+| Name                                                              | Description                                                                                                                                                                                                            |
+| ----------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| AdGuard Home Statistics: AdGuard Home Statistics Period Discovery | Discovers the statistics time unit, `hours` or `days`, from the AdGuard Home statistics retention period. A retention change that switches the time unit creates new items, keeping the history of each unit separated |
+
+<BR>
+
+### ITEM PROTOTYPES (*AdGuard Home Stats*)
+
+| Name                                                               | Description                                                                             |
+| ------------------------------------------------------------------ | --------------------------------------------------------------------------------------- |
+| AdGuard Home DNS Queries Block Rate Current {\#ADG.TIME.UNIT.NAME} | Query block rate in the current hour or day bucket |
+| AdGuard Home Total DNS Blocks Current {\#ADG.TIME.UNIT.NAME}       | The number of DNS requests blocked by filtering rules in the current hour or day bucket |
+| AdGuard Home Total DNS Queries Current {\#ADG.TIME.UNIT.NAME}      | The number of DNS queries in the current hour or day bucket |
+
+> **The bucket values increase during the bucket period and reset when a new one starts: every hour in `hours` mode, every day at 01:00 UTC in `days` mode. AdGuard Home uses `hours` when the statistics retention period is shorter than 8 days, such as 24 hours or 7 days, and `days` otherwise.**
+
+<BR>
+
+### TRIGGER PROTOTYPES (*AdGuard Home Stats*)
+
+| Name                                                                | Description                                                                                                     |
+| ------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| AdGuard Home Abnormally High Queries Current {\#ADG.TIME.UNIT.NAME} | Indicates that the previous hour average of the current bucket queries is more than twice the last 30d baseline |
 
 <BR>
 
@@ -185,6 +212,14 @@ This template has been tested with AdGuard Home version `> 0.107` on an Asus RT-
 | --------------------------------------------------------------------- | ----------------------------------------- |
 | AdGuard Home Filter is Disabled - {\#FILTER.NAME}                     | Indicates this AdGuard Filter is disabled |
 | AdGuard Home Filter not Updated in more than 7 days - {\#FILTER.NAME} | Indicates that the AdGuard Filter is enabled but not updated for more than 7 days |
+
+<BR>
+
+### DASHBOARD (*AdGuard Home Filters*)
+
+| Name                 | Description                                                                                      |
+| -------------------- | ------------------------------------------------------------------------------------------------ |
+| AdGuard Home Filters | Total filter rules, rules count per filter, filter status, and time since the last filter update |
 
 <BR>
 
